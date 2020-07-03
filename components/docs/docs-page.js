@@ -3,8 +3,7 @@ import { useRouter } from 'next/router';
 import Link from 'next/link';
 import { getSlug, removeFromLast, addTagToSlug } from '../../lib/docs/utils';
 import { GITHUB_URL, REPO_NAME } from '../../lib/github/constants';
-import addLinkListener from '../../lib/add-link-listener';
-import Notification from './notification';
+import addRouterEvents from '../../lib/add-router-events';
 import FooterFeedback from '../footer-feedback';
 import Button from '../button';
 import ArrowIcon from '../arrow-icon';
@@ -16,8 +15,8 @@ function areEqual(prevProps, props) {
 }
 
 function DocsPage({ route, html, prevRoute, nextRoute }) {
-  const { query } = useRouter();
-  const { tag, slug } = getSlug(query);
+  const router = useRouter();
+  const { tag, slug } = getSlug(router.query);
   const href = '/docs/[[...slug]]';
   const editUrl = `${GITHUB_URL}/${REPO_NAME}/edit/canary${route.path}`;
 
@@ -31,10 +30,13 @@ function DocsPage({ route, html, prevRoute, nextRoute }) {
         if (nodeHref.startsWith('/docs')) {
           // Handle relative documentation paths
           const as = addTagToSlug(nodeHref, tag);
-          listeners.push(addLinkListener(node, { href, as }));
+
+          router.prefetch(href, as);
+          listeners.push(addRouterEvents(node, router, { href, as }));
         } else {
           // Handle any other relative path
-          listeners.push(addLinkListener(node, { href: nodeHref }));
+          router.prefetch(nodeHref);
+          listeners.push(addRouterEvents(node, router, { href: nodeHref }));
         }
       }
     });
