@@ -8,7 +8,7 @@ Router.events.on('routeChangeComplete', url => {
   trackPageview(url);
 });
 
-export default function PageContainer({ title, description, children }) {
+export default function PageContainer({ title, description, children, shouldIndex = true }) {
   return (
     <div>
       <Head>
@@ -19,6 +19,7 @@ export default function PageContainer({ title, description, children }) {
             content={description || `Next.js by ${ORG_NAME} is the React framework for production`}
           />
         )}
+        {!shouldIndex && <meta name="robots" content="noindex" />}
       </Head>
       {children}
       <style jsx global>

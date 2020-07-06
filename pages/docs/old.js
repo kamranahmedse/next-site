@@ -1,5 +1,4 @@
 import { SkipNavContent } from '@reach/skip-nav';
-
 import PageContainer from '../../components/page-container';
 import withPure from '../../components/hoc/pure';
 import Container from '../../components/container';
@@ -10,7 +9,7 @@ import Documentation, { components } from '../../components/docs/documentation';
 const Content = withPure(() => <Markdown components={components} />);
 
 export default () => (
-  <PageContainer>
+  <PageContainer shouldIndex={false}>
     <DocumentationHeader />
     <Container>
       <Documentation headings={headings}>
